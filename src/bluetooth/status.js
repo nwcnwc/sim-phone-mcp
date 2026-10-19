@@ -1,6 +1,14 @@
 import dbus from 'dbus-next';
+import { dbusValue } from '../telephony/dbus-util.js';
 
 const BLUEZ = 'org.bluez';
+const HFP_AG_UUID = '0000111f-0000-1000-8000-00805f9b34fb';
+
+function deviceUuids(raw) {
+  const list = dbusValue(raw) || [];
+  if (!Array.isArray(list)) return [];
+  return list.map((u) => String(dbusValue(u)).toLowerCase());
+}
 
 function adapterPathFromConfig(cfg, adapters) {
   if (!cfg.btAdapter) return adapters[0] || null;
@@ -25,19 +33,19 @@ export async function readBluetoothStatus(cfg, deps = {}) {
         const a = ifaces['org.bluez.Adapter1'];
         adapters.push({
           path: objPath,
-          name: a.Name || objPath,
-          powered: a.Powered === true,
-          address: a.Address || '',
+          name: dbusValue(a.Name) || objPath,
+          powered: dbusValue(a.Powered) === true,
+          address: dbusValue(a.Address) || '',
         });
       }
       if (ifaces['org.bluez.Device1']) {
         const d = ifaces['org.bluez.Device1'];
         devices.push({
           path: objPath,
-          alias: d.Alias || d.Name || objPath,
-          paired: d.Paired === true,
-          connected: d.Connected === true,
-          uuids: d.UUIDs || [],
+          alias: dbusValue(d.Alias) || dbusValue(d.Name) || objPath,
+          paired: dbusValue(d.Paired) === true,
+          connected: dbusValue(d.Connected) === true,
+          uuids: deviceUuids(d.UUIDs),
         });
       }
     }
@@ -47,10 +55,7 @@ export async function readBluetoothStatus(cfg, deps = {}) {
     const phone = devices.find((d) => d.paired && d.connected)
       || devices.find((d) => d.paired)
       || null;
-    const hfpUuid = '0000111e-0000-1000-8000-00805f9b34fb';
-    const hfpConnected = phone
-      ? phone.connected && (phone.uuids.includes(hfpUuid) || phone.connected)
-      : false;
+    const hfpConnected = phone ? phone.uuids.includes(HFP_AG_UUID) : false;
     return {
       adapterPowered: powered,
       adapterName,
