@@ -6,6 +6,8 @@ Let your AI agent call you on a real **Android or iPhone** and SIM over Bluetoot
 
 **Safety:** owner-centric allowlist only. `call_owner` dials the configured owner with no redirect argument. `dial` refuses any number not on the allowlist. Nothing auto-dials on startup.
 
+**Caller ID can be spoofed.** Owner-looking calls run a local **challenge/response** before sensitive tools; wrong or silent answers enter **decoy mode** (no calls, no status, time-limited small talk). See **[docs/challenge-response.md](docs/challenge-response.md)**.
+
 ## Default setup (Grok Bot desktop)
 
 1. Run **Grok Bot desktop** with **local computer access** on a **Linux, Windows, or macOS** laptop ([platform limits](docs/platforms.md)).
@@ -27,6 +29,8 @@ Full flow: **[docs/setup.md](docs/setup.md)** · Laptop bridge: **[docs/setup-la
 | `status` | Adapter, pairing, call state, backend (no owner digits) |
 | `speak` | Kokoro TTS to HFP uplink |
 | `listen` | Record downlink; transcript if STT configured |
+
+After `call_owner` or an owner-looking inbound call, the server may run your configured challenge before the call is **verified**. Tool output includes `call_security_mode` (`idle`, `verified`, `decoy`).
 
 ## Quick start (Linux bridge)
 
@@ -58,6 +62,8 @@ Telephony backends: **[docs/hfp-backend.md](docs/hfp-backend.md)** · Platforms:
 | `SIMPHONE_VOICE` | Kokoro voice (default `af_heart`) |
 | `SIMPHONE_STT_URL` | POST WAV, JSON `{ "text": "..." }` |
 | `SIMPHONE_STT_CMD` | Command; WAV path as sole argument |
+| `SIMPHONE_CHALLENGE_PHRASE` | Spoken challenge (local config only) |
+| `SIMPHONE_CHALLENGE_ANSWER` | Expected spoken reply (never logged) |
 
 ## Plugins
 

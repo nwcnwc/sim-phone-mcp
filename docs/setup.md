@@ -16,8 +16,9 @@ The MCP server runs on a **Linux, Windows, or macOS** laptop (macOS call audio i
 1. **Install the HFP bridge** on the Linux host ([laptop](setup-laptop-bridge.md#linux) or [always-on](setup-always-on.md)).
 2. **Pair the phone** like a car Bluetooth kit ([Android and iPhone notes](setup-android.md)).
 3. **Configure the owner number** locally (`SIMPHONE_OWNER` or config file) — never commit real digits.
-4. **Connect the plugin** in Grok Bot or Cursor (`npx -y git+https://github.com/nwcnwc/sim-phone-mcp.git` or local `bin/sim-phone-mcp.js`).
-5. Run **`status`** before any call; follow the [first test call checklist](setup-android.md#first-test-call-checklist).
+4. **Optional but recommended:** set a local **challenge phrase and answer** so spoofed caller ID cannot unlock your agent ([challenge-response.md](challenge-response.md)).
+5. **Connect the plugin** in Grok Bot or Cursor (`npx -y git+https://github.com/nwcnwc/sim-phone-mcp.git` or local `bin/sim-phone-mcp.js`).
+6. Run **`status`** before any call; follow the [first test call checklist](setup-android.md#first-test-call-checklist).
 
 Telephony backends (PipeWire native vs oFono): **[hfp-backend.md](hfp-backend.md)**.
 

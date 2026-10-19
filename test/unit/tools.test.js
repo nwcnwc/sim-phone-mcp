@@ -8,6 +8,9 @@ import { loadConfig } from '../../src/config.js';
 import { buildAllowlist } from '../../src/phone/allowlist.js';
 import { appendCallLog, readCallLog } from '../../src/phone/call-log.js';
 import { tmpHome } from './fixtures/tmp-home.js';
+import { createCallGate } from '../../src/security/call-gate.js';
+import { createLockoutTracker } from '../../src/security/lockout.js';
+import { loadChallengeSettings } from '../../src/security/challenge-config.js';
 
 class FakeTelephony {
   constructor() {
@@ -84,6 +87,13 @@ beforeEach(async () => {
     logCall(entry) {
       appendCallLog(home, entry);
     },
+    challenge: loadChallengeSettings({}, {}),
+    callGate: createCallGate(),
+    lockout: createLockoutTracker({
+      max_failures: 5,
+      window_seconds: 3600,
+      duration_seconds: 1800,
+    }),
   };
   await connect();
 });

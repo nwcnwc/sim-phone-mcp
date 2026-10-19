@@ -12,7 +12,8 @@ export async function runMain(product, env = process.env) {
       'Environment: SIMPHONE_HOME, SIMPHONE_OWNER, SIMPHONE_ALLOW, SIMPHONE_CONFIG,\n' +
       'SIMPHONE_HFP (auto|pipewire|ofono|winrt|macos), SIMPHONE_BRIDGE_CMD, SIMPHONE_BRIDGE,\n' +
       'SIMPHONE_BT_ADAPTER, SIMPHONE_VOICE,\n' +
-      'SIMPHONE_STT_URL, SIMPHONE_STT_CMD.\n' +
+      'SIMPHONE_STT_URL, SIMPHONE_STT_CMD,\n' +
+      'SIMPHONE_CHALLENGE_PHRASE, SIMPHONE_CHALLENGE_ANSWER (local only; never logged).\n' +
       (product.readme ? 'See ' + product.readme + '\n' : ''),
     );
     process.exit(0);

@@ -24,10 +24,14 @@ export function defaultHome() {
   return path.join(os.homedir(), '.local', 'share', 'sim-phone');
 }
 
+export function loadConfigFile(env = process.env) {
+  const filePath = env.SIMPHONE_CONFIG || '';
+  return filePath ? readJsonFile(filePath) : {};
+}
+
 export function loadConfig(env = process.env) {
   const home = env.SIMPHONE_HOME || defaultHome();
-  const filePath = env.SIMPHONE_CONFIG || '';
-  const file = filePath ? readJsonFile(filePath) : {};
+  const file = loadConfigFile(env);
 
   const owner = pick(env.SIMPHONE_OWNER, file.owner);
   const allowRaw = pick(env.SIMPHONE_ALLOW, file.allow);

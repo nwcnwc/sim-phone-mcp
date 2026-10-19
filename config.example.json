@@ -3,5 +3,22 @@
   "allow": "",
   "hfp": "auto",
   "stt_url": "",
-  "voice": "af_heart"
+  "voice": "af_heart",
+  "challenge": {
+    "phrase": "",
+    "answer": "",
+    "intro": "This is your assistant on a secured line.",
+    "listen_seconds": 8,
+    "decoy_max_seconds": 120,
+    "match": {
+      "ignore_case": true,
+      "ignore_punctuation": true,
+      "max_edit_distance": 1
+    },
+    "lockout": {
+      "max_failures": 5,
+      "window_seconds": 3600,
+      "duration_seconds": 1800
+    }
+  }
 }

@@ -3,6 +3,8 @@ import { normalizeNumber } from './phone/normalize.js';
 import { isAllowed, DISALLOWED_MESSAGE } from './phone/allowlist.js';
 import { speakOnCall, hasUplinkAudio } from './audio/speak.js';
 import { listenOnCall } from './audio/listen.js';
+import { runOwnerChallenge } from './security/challenge-flow.js';
+import { isOwnerIncomingCall, incomingCallerId } from './security/incoming-caller.js';
 
 function ok(data) {
   return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
@@ -18,7 +20,15 @@ const NO_TELEPHONY_LINUX =
 const NO_TELEPHONY_OTHER =
   'No telephony backend is available. Install the platform bridge helper (docs/setup-laptop-bridge.md) or use a Linux bridge host.';
 
+function gateCheck(ctx, toolName) {
+  const g = ctx.callGate.canInvokeTool(toolName);
+  if (!g.allowed) return err(g.message);
+  return null;
+}
+
 async function dialNumber(ctx, number, action) {
+  const blocked = gateCheck(ctx, action);
+  if (blocked) return blocked;
   if (!isAllowed(number, ctx.allowlist)) {
     return err(DISALLOWED_MESSAGE);
   }
@@ -34,7 +44,22 @@ async function dialNumber(ctx, number, action) {
       action,
       result: 'dialed',
     });
-    return ok({ dialed: true, action });
+    const payload = { dialed: true, action };
+    const isOwnerDial = ctx.cfg.owner
+      && normalized === normalizeNumber(ctx.cfg.owner);
+    if (isOwnerDial && ctx.challenge.enabled) {
+      const challengeResult = await runOwnerChallenge(ctx, {
+        caller: normalized,
+        direction: 'outgoing',
+      });
+      Object.assign(payload, {
+        owner_challenge: challengeResult,
+        call_security_mode: ctx.callGate.mode,
+      });
+    } else if (isOwnerDial) {
+      ctx.callGate.setVerified();
+    }
+    return ok(payload);
   } catch (e) {
     ctx.logCall({
       direction: 'outgoing',
@@ -52,6 +77,8 @@ export function registerPhoneTools(server, ctx) {
     description: 'Dials the configured owner number only. There is no argument and no way to redirect the call.',
     inputSchema: {},
   }, async () => {
+    const blocked = gateCheck(ctx, 'call_owner');
+    if (blocked) return blocked;
     if (!ctx.cfg.owner || !String(ctx.cfg.owner).trim()) {
       return err('SIMPHONE_OWNER is not configured.');
     }
@@ -71,10 +98,33 @@ export function registerPhoneTools(server, ctx) {
     description: 'Answers the current incoming Bluetooth HFP call.',
     inputSchema: {},
   }, async () => {
+    const blocked = gateCheck(ctx, 'answer');
+    if (blocked) return blocked;
+    let preState = { state: 'idle', calls: [] };
+    try {
+      preState = await ctx.telephony.getCallState();
+    } catch {
+      /* continue */
+    }
+    const ownerIncoming = isOwnerIncomingCall(ctx.cfg.owner, preState);
+    const caller = incomingCallerId(preState);
     try {
       await ctx.telephony.answer();
-      ctx.logCall({ direction: 'incoming', number: '', action: 'answer', result: 'answered' });
-      return ok({ answered: true });
+      ctx.logCall({ direction: 'incoming', number: caller, action: 'answer', result: 'answered' });
+      const payload = { answered: true };
+      if (ownerIncoming && ctx.challenge.enabled) {
+        const challengeResult = await runOwnerChallenge(ctx, {
+          caller,
+          direction: 'incoming',
+        });
+        Object.assign(payload, {
+          owner_challenge: challengeResult,
+          call_security_mode: ctx.callGate.mode,
+        });
+      } else if (ownerIncoming) {
+        ctx.callGate.setVerified();
+      }
+      return ok(payload);
     } catch (e) {
       return err(String((e && e.message) || e));
     }
@@ -85,8 +135,11 @@ export function registerPhoneTools(server, ctx) {
     description: 'Ends the current call.',
     inputSchema: {},
   }, async () => {
+    const blocked = gateCheck(ctx, 'hang_up');
+    if (blocked) return blocked;
     try {
       await ctx.telephony.hangUp();
+      ctx.callGate.reset();
       ctx.logCall({ direction: 'outgoing', number: '', action: 'hang_up', result: 'hung_up' });
       return ok({ hung_up: true });
     } catch (e) {
@@ -99,6 +152,8 @@ export function registerPhoneTools(server, ctx) {
     description: 'Adapter power, paired phone, call state, allowlist size, and backend. Never includes the owner digits.',
     inputSchema: {},
   }, async () => {
+    const blocked = gateCheck(ctx, 'status');
+    if (blocked) return blocked;
     const bt = await ctx.bluetooth.read();
     let call = { state: 'idle' };
     try {
@@ -122,6 +177,8 @@ export function registerPhoneTools(server, ctx) {
       allowlist_size: ctx.allowlist.length,
       telephony_backend: ctx.telephony.backend,
       telephony_available: ctx.telephony.available,
+      challenge_enabled: !!ctx.challenge.enabled,
+      call_security_mode: ctx.callGate.mode,
     });
   });
 
@@ -132,6 +189,8 @@ export function registerPhoneTools(server, ctx) {
       text: z.string().min(1).max(8000).describe('Words to speak on the call.'),
     },
   }, async ({ text }) => {
+    const blocked = gateCheck(ctx, 'speak');
+    if (blocked) return blocked;
     const audioUp = ctx.audio.hasUplinkAudio
       ? await ctx.audio.hasUplinkAudio()
       : await hasUplinkAudio(ctx.audio);
@@ -154,6 +213,8 @@ export function registerPhoneTools(server, ctx) {
       seconds: z.number().min(1).max(30).optional().describe('Seconds to record (default 5, max 30).'),
     },
   }, async ({ seconds }) => {
+    const blocked = gateCheck(ctx, 'listen');
+    if (blocked) return blocked;
     const sec = seconds ?? 5;
     try {
       const listenFn = ctx.audio.listenOnCall
