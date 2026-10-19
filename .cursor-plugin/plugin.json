@@ -1,7 +1,7 @@
 {
   "name": "sim-phone",
   "version": "0.1.0",
-  "description": "Bluetooth HFP phone MCP: call owner, speak and listen on the headset audio path.",
+  "description": "Bluetooth HFP phone MCP for Android/iPhone: owner-only dial, speak and listen. Linux bridge; Grok desktop local access or always-on host.",
   "mcpServers": ".cursor-plugin/mcp.json",
   "skills": "skills"
 }

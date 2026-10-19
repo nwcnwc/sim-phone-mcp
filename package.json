@@ -1,7 +1,7 @@
 {
   "name": "sim-phone-mcp",
   "version": "0.1.0",
-  "description": "MCP server: let an AI agent call its owner on a real Android phone over Bluetooth HFP hands-free.",
+  "description": "MCP server: owner-only calls via spare Android or iPhone over Bluetooth HFP on a Linux bridge (Grok desktop local access or always-on host).",
   "license": "UNLICENSED",
   "type": "module",
   "bin": {
@@ -18,7 +18,8 @@
     "config.example.json",
     "README.md",
     "LICENSE",
-    "docs"
+    "docs",
+    "scripts"
   ],
   "engines": {
     "node": ">=20"

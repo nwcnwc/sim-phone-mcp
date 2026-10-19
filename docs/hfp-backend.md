@@ -1,6 +1,6 @@
 # HFP telephony backends
 
-The Linux host acts as the Bluetooth **hands-free unit** (`hfp_hf`). The Android phone is the audio gateway. Dialing and call control go through one of two D-Bus stacks; the MCP server picks at runtime.
+The Linux host acts as the Bluetooth **hands-free unit** (`hfp_hf`). The paired phone (Android or iPhone) is the cellular audio gateway. Dialing and call control go through one of two D-Bus stacks; the MCP server picks at runtime. End users pair over normal Bluetooth HFP only — no `adb` and no developer mode.
 
 ## Preferred: PipeWire native telephony
 

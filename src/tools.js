@@ -103,7 +103,11 @@ export function registerPhoneTools(server, ctx) {
     } catch {
       call = { state: 'unknown' };
     }
+    const bridgePlatform = process.platform;
+    const bridgeLinuxSupported = bridgePlatform === 'linux';
     return ok({
+      bridge_platform: bridgePlatform,
+      bridge_linux_supported: bridgeLinuxSupported,
       adapter_powered: bt.adapterPowered,
       adapter_name: bt.adapterName,
       paired_phone: bt.pairedPhone,

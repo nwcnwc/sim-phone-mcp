@@ -1,8 +1,8 @@
 {
   "name": "sim-phone",
   "version": "0.1.0",
-  "description": "Let your AI agent call you on a spare Android phone and SIM over Bluetooth hands-free (HFP). Dial, answer, speak with Kokoro, and listen on the call audio path — owner allowlist only, self-hosted on your Linux machine.",
+  "description": "Call your owner on a spare Android or iPhone (SIM) over Bluetooth HFP — no developer mode. Default: Grok desktop + local computer access on a Linux laptop bridge; optional always-on Linux box via Tailscale. Owner allowlist, Kokoro speak, call listen.",
   "homepage": "https://github.com/nwcnwc/sim-phone-mcp#readme",
   "repository": "https://github.com/nwcnwc/sim-phone-mcp",
-  "keywords": ["mcp", "phone", "bluetooth", "hfp", "android", "self-hosted"]
+  "keywords": ["mcp", "phone", "bluetooth", "hfp", "android", "iphone", "grok-bot", "self-hosted"]
 }

@@ -1,8 +1,20 @@
 # sim-phone-mcp
 
-Let your AI agent call you on a real Android phone and SIM over Bluetooth **HFP hands-free**. The Linux PC is the headset; the phone is the cellular audio gateway. MCP tools dial, answer, hang up, speak (Kokoro TTS on the call uplink), and listen (downlink recording + optional STT).
+Let your AI agent call you on a real **Android or iPhone** and SIM over Bluetooth **HFP hands-free** (pair like a car kit). The Linux bridge is the headset; the phone is the cellular audio gateway. MCP tools dial, answer, hang up, speak (Kokoro TTS on the call uplink), and listen (downlink recording + optional STT).
+
+**No developer mode.** The plugin does not use `adb`; USB debugging is only an optional lab shortcut outside this repo.
 
 **Safety:** owner-centric allowlist only. `call_owner` dials the configured owner with no redirect argument. `dial` refuses any number not on the allowlist. Nothing auto-dials on startup.
+
+## Default setup (Grok Bot desktop)
+
+1. Run **Grok Bot desktop** with **local computer access** on a **Linux** laptop (or use an [always-on Linux bridge](docs/setup-always-on.md)).
+2. Pair the spare phone to that machine’s Bluetooth ([phone guide](docs/setup-android.md)).
+3. Install this MCP plugin and set `SIMPHONE_OWNER` (or a private config file).
+
+Calls work only while the laptop is **awake** and the Grok app is **open**. For 24/7, use a Pi or old laptop on [Tailscale](docs/setup-always-on.md). Platform limits: **[docs/platforms.md](docs/platforms.md)**.
+
+Full flow: **[docs/setup.md](docs/setup.md)** · Laptop bridge: **[docs/setup-laptop-bridge.md](docs/setup-laptop-bridge.md)**
 
 ## Tools
 
@@ -16,17 +28,18 @@ Let your AI agent call you on a real Android phone and SIM over Bluetooth **HFP 
 | `speak` | Kokoro TTS to HFP uplink |
 | `listen` | Record downlink; transcript if STT configured |
 
-## Quick start
+## Quick start (Linux bridge)
 
 ```bash
 npm install
-export SIMPHONE_OWNER="+10000000000"   # your number — do not commit
+bash scripts/install-bridge-linux.sh   # optional: distro packages
+export SIMPHONE_OWNER="+10000000000"   # placeholder — do not commit a real number
 node bin/sim-phone-mcp.js
 ```
 
-Optional JSON config: copy `config.example.json` (empty placeholders). Env vars override the file.
+Copy `config.example.json` for persistent settings. Env vars override the file.
 
-See **[docs/setup-android.md](docs/setup-android.md)** for pairing, WirePlumber `hfp_hf`, and first-call checks. Telephony backends: **[docs/hfp-backend.md](docs/hfp-backend.md)**.
+Telephony backends: **[docs/hfp-backend.md](docs/hfp-backend.md)**.
 
 ## Environment
 
