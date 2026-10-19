@@ -9,7 +9,7 @@ sim-phone lets a Grok Bot or Cursor agent place **owner-only** calls through a s
 | **[Laptop bridge](setup-laptop-bridge.md)** (default) | Grok Bot **desktop** with **local computer access**; Bluetooth on the same machine that runs the MCP | Calls work only while the laptop is **awake**, Bluetooth is on, and the Grok app is **open** |
 | **[Always-on bridge](setup-always-on.md)** (optional) | Small Linux box (Pi, old laptop) at home with the phone nearby; reach it over **Tailscale** | **24/7** when the box and phone stay paired |
 
-The MCP server and HFP stack run on a **Linux** bridge today. See **[Platform support](platforms.md)** for macOS and Windows laptops.
+The MCP server runs on a **Linux, Windows, or macOS** laptop (macOS call audio is limited — see **[Platform support](platforms.md)**).
 
 ## Setup flow (all paths)
 

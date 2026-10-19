@@ -12,15 +12,18 @@ function err(message) {
   return { isError: true, content: [{ type: 'text', text: message }] };
 }
 
-const NO_TELEPHONY =
+const NO_TELEPHONY_LINUX =
   'No telephony backend is available. Need org.pipewire.Telephony on the session bus or org.ofono on the system bus. See docs/hfp-backend.md.';
+
+const NO_TELEPHONY_OTHER =
+  'No telephony backend is available. Install the platform bridge helper (docs/setup-laptop-bridge.md) or use a Linux bridge host.';
 
 async function dialNumber(ctx, number, action) {
   if (!isAllowed(number, ctx.allowlist)) {
     return err(DISALLOWED_MESSAGE);
   }
   if (!ctx.telephony.available) {
-    return err(NO_TELEPHONY);
+    return err(process.platform === 'linux' ? NO_TELEPHONY_LINUX : NO_TELEPHONY_OTHER);
   }
   const normalized = normalizeNumber(number);
   try {
@@ -104,10 +107,13 @@ export function registerPhoneTools(server, ctx) {
       call = { state: 'unknown' };
     }
     const bridgePlatform = process.platform;
-    const bridgeLinuxSupported = bridgePlatform === 'linux';
+    const bridgeSupported = bridgePlatform === 'linux'
+      || ctx.telephony.backend === 'winrt'
+      || ctx.telephony.backend === 'macos';
     return ok({
       bridge_platform: bridgePlatform,
-      bridge_linux_supported: bridgeLinuxSupported,
+      bridge_supported: bridgeSupported,
+      bridge_linux_supported: bridgePlatform === 'linux',
       adapter_powered: bt.adapterPowered,
       adapter_name: bt.adapterName,
       paired_phone: bt.pairedPhone,

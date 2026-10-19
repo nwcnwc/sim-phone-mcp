@@ -1,7 +1,7 @@
 {
   "name": "sim-phone-mcp",
   "version": "0.1.0",
-  "description": "MCP server: owner-only calls via spare Android or iPhone over Bluetooth HFP on a Linux bridge (Grok desktop local access or always-on host).",
+  "description": "MCP server: owner-only calls via spare Android or iPhone over Bluetooth HFP on Linux, Windows, or macOS bridge hosts.",
   "license": "UNLICENSED",
   "type": "module",
   "bin": {
@@ -19,7 +19,8 @@
     "README.md",
     "LICENSE",
     "docs",
-    "scripts"
+    "scripts",
+    "helpers"
   ],
   "engines": {
     "node": ">=20"

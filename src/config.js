@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const HFP_VALUES = new Set(['auto', 'pipewire', 'ofono']);
+const HFP_VALUES = new Set(['auto', 'pipewire', 'ofono', 'winrt', 'macos']);
 
 function readJsonFile(file) {
   try {

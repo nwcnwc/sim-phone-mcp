@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { findHfpDownlinkNode } from './pipewire-nodes.js';
+import { findHfpDownlinkNode, findHfpUplinkNode } from './pipewire-nodes.js';
 import { pwDump, defaultPwDump } from './speak.js';
 
 export async function recordDownlink(seconds, cfg, deps = {}) {
