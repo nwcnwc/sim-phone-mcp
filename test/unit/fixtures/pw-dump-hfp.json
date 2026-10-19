@@ -1,0 +1,22 @@
+[
+  {
+    "type": "PipeWire:Interface:Node",
+    "id": 101,
+    "info": {
+      "props": {
+        "node.name": "bluez_input.00_AA_BB_CC_DD_EE",
+        "media.class": "Stream/Input/Audio"
+      }
+    }
+  },
+  {
+    "type": "PipeWire:Interface:Node",
+    "id": 102,
+    "info": {
+      "props": {
+        "node.name": "bluez_output.00_AA_BB_CC_DD_EE",
+        "media.class": "Stream/Output/Audio"
+      }
+    }
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "name": "sim-phone",
+  "version": "0.1.0",
+  "description": "Let your AI agent call you on a spare Android phone and SIM over Bluetooth hands-free (HFP). Dial, answer, speak with Kokoro, and listen on the call audio path — owner allowlist only, self-hosted on your Linux machine.",
+  "homepage": "https://github.com/nwcnwc/sim-phone-mcp#readme",
+  "repository": "https://github.com/nwcnwc/sim-phone-mcp",
+  "keywords": ["mcp", "phone", "bluetooth", "hfp", "android", "self-hosted"]
+}

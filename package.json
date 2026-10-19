@@ -1,0 +1,54 @@
+{
+  "name": "sim-phone-mcp",
+  "version": "0.1.0",
+  "description": "MCP server: let an AI agent call its owner on a real Android phone over Bluetooth HFP hands-free.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "bin": {
+    "sim-phone-mcp": "bin/sim-phone-mcp.js"
+  },
+  "main": "src/server.js",
+  "files": [
+    "bin",
+    "src",
+    "skills",
+    ".cursor-plugin",
+    ".grok-plugin",
+    ".mcp.json",
+    "config.example.json",
+    "README.md",
+    "LICENSE",
+    "docs"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node bin/sim-phone-mcp.js",
+    "test": "node --test test/unit/*.test.js"
+  },
+  "keywords": [
+    "mcp",
+    "bluetooth",
+    "hfp",
+    "phone",
+    "grok-bot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nwcnwc/sim-phone-mcp.git"
+  },
+  "homepage": "https://github.com/nwcnwc/sim-phone-mcp#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "dbus-next": "0.10.2",
+    "gifos-mcp-core": "git+https://github.com/nwcnwc/gifos-mcp-core.git#8fb585babc3c111757744d13dadbf5b810cb3d88",
+    "zod": "3.25.76"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/nwcnwc/sim-phone-mcp/issues"
+  }
+}

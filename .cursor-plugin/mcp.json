@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sim-phone": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "git+https://github.com/nwcnwc/sim-phone-mcp.git"
+      ]
+    }
+  }
+}
